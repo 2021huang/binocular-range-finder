@@ -1,33 +1,74 @@
-# 核心算法库 (C++ / CUDA / ONNX Runtime)
+# 核心算法库 (C++ / CUDA)
 
-## 目录结构
+## 算法原理
+
+双目测距算法流程分为以下 5 个步骤：
+
+### Step 1：双目相机标定
+采集标定板图像，使用张氏标定法获取左右相机的内参 ($K_l, K_r$) 和外参 ($R, T$)。
+
+### Step 2：图像校正
+利用双目内参数对两个相机采集的眼睛图像进行畸变校正和极线校正，使左右图像行对齐。
+
+### Step 3：瞳孔位置识别
+分别对左右校正后的图像，使用深度学习语义分割模型进行瞳孔识别，获得瞳孔中心像素坐标 $P_0$ 和 $P_1$。
+
+### Step 4：三角测量
+利用双目视差原理进行三角测量，计算眼睛到双目的实际距离。
+
+### Step 5：坐标变换
+以双目中心连线中点为原点，建立坐标系：
+- **X 轴**：沿双目连线向左为正
+- **Y 轴**：垂直 X 轴向下为正
+- **Z 轴**：垂直 XOY 平面指向眼睛为正
+
+输出眼睛空间坐标 $P_t(x, y, z)$。
+
+---
+
+## 算法流程图
+
+```mermaid
+flowchart TD
+    A[开始] --> B[标定双目相机]
+    B --> B1[获取内参 Kl, Kr]
+    B --> B2[获取外参 R, T]
+    B1 --> C[图像校正/去畸变]
+    B2 --> C
+    C --> D[左图瞳孔识别]
+    C --> E[右图瞳孔识别]
+    D --> F[左瞳孔坐标 P0]
+    E --> G[右瞳孔坐标 P1]
+    F --> H[三角测量]
+    G --> H
+    H --> I[空间坐标 Pt(x,y,z)]
+    I --> J[坐标系变换]
+    J --> K[输出最终坐标]
+    K --> L[结束]
 ```
-03_Core_Algorithms/
-├── src/                     # 源代码
-│   ├── matching_cuda.cu     # 并行立体匹配加速 (CUDA)
-│   ├── rectify.cpp          # 极线校正实现
-│   ├── triangulate.cpp      # 三角测量
-│   ├── pupil_seg.cpp        # 瞳孔分割 (ONNX Runtime)
-│   └── pipeline.cpp         # 主流程管线
-├── include/                 # DLL 接口定义
-│   ├── StereoMatcher.h
-│   ├── Triangulate.h
-│   └── PupilDetector.h
-└── CMakeLists.txt
-```
 
-## 多平台适配
+---
 
-| 平台 | 推理库 | CMake 目标 | 状态 |
-|------|--------|------------|------|
-| CPU 通用 | ONNX Runtime | `binocular_cpu` | ✅ |
-| Intel 核显 | OpenVINO | `binocular_ov` | ✅ ~120ms |
-| AMD 核显 | DirectML | `binocular_dml` | 🔄 优化中 |
-| RK3588 NPU | RKNN | `binocular_rk3588` | ✅ ~80ms |
+## 多平台部署
 
-## 依赖
-- OpenCV ≥ 4.5
-- ONNX Runtime / DirectML / OpenVINO / RKNN (按平台选择)
-- CUDA Toolkit (若启用 CUDA 加速)
+| 平台 | 推理库 | 目录 | 状态 |
+|------|--------|------|------|
+| CPU 通用 | Microsoft.ML.OnnxRuntime | `src/onnxruntime_cpu/` | 🟡 待上传 |
+| AMD 核显 | Microsoft.ML.OnnxRuntime.DirectML | `src/directml_amd/` | 🟡 待上传 |
+| Intel 核显 | OpenVINO | `src/openvino_intel/` | 🟡 待上传 |
+| RK3588 NPU | NUP RK3588 SDK | `src/rk3588_npu/` | 🟡 待上传 |
+
+---
+
+## DLL 接口定义
+
+头文件见 [`include/`](include/) 目录，暴露给上位机调用的 C 风格接口：
+
+| 函数 | 功能 |
+|------|------|
+| `Stereo_Init()` | 初始化双目测距引擎 |
+| `Stereo_ProcessFrame()` | 处理单帧图像并返回距离 |
+| `Stereo_GetPupilPos()` | 获取瞳孔像素坐标 |
+| `Stereo_Release()` | 释放资源 |
 
 > 源代码由开发者上传

@@ -24,9 +24,12 @@ stereo_vision_kb/
 ├── 01_Theory_and_Math/         # 理论与数学推导 (Markdown + LaTeX)
 ├── 02_Prototypes/              # 算法原型验证 (MATLAB)
 ├── 03_Core_Algorithms/         # 核心算法库 (C++ / CUDA / ONNX)
-├── 04_UI_Integration/          # 上位机与接口 (C# / WPF)
+│   ├── src/                    # 四平台推理部署代码
+│   ├── include/                # DLL 接口定义 (StereoApi.h)
+│   └── README.md               # 算法原理 + 流程图
+├── 04_UI_Integration/          # 上位机接口 (C++ DLL → C#/Python)
 ├── 05_Datasets/                # 标定板图像与测试数据 (Git LFS)
-├── 06_Config_Params/           # 参数与配置文件 (YAML / JSON)
+├── 06_Config_Params/           # 参数与配置文件 (YAML)
 └── README.md                   # 本文件
 ```
 
@@ -38,8 +41,8 @@ stereo_vision_kb/
 |------|------|------|
 | 理论 | 极线几何、坐标系变换、三角测量 | [`01_Theory_and_Math/`](01_Theory_and_Math/) |
 | 原型 | MATLAB 标定/深度图脚本 | [`02_Prototypes/`](02_Prototypes/) |
-| 算法 | C++/CUDA 推理部署代码 | [`03_Core_Algorithms/`](03_Core_Algorithms/) |
-| 上位机 | C# P/Invoke、WPF 渲染控件 | [`04_UI_Integration/`](04_UI_Integration/) |
+| 算法 | C++ 核心算法 + DLL 接口 (四平台) | [`03_Core_Algorithms/`](03_Core_Algorithms/) |
+| 接口 | 上位机 DLL 调用规范 | [`04_UI_Integration/`](04_UI_Integration/) |
 | 数据 | 标定原图、人眼数据集 (LFS) | [`05_Datasets/`](05_Datasets/) |
 | 配置 | 内外参 YAML、样机记录 | [`06_Config_Params/`](06_Config_Params/) |
 
@@ -55,12 +58,12 @@ stereo_vision_kb/
 
 ---
 
-## 📐 核心流程
+## 🔄 核心流程
 
 ```
 ┌──────────┐   ┌──────────┐   ┌───────────┐   ┌──────────┐   ┌──────────┐
-│ 双目标定  │ → │ 图像校正  │ → │ 瞳孔识别   │ → │ 三角测量  │ → │ 坐标变换  │
-│ 06_Config │   │ 去畸变   │   │ 语义分割  │   │ 测距公式 │   │ DL接口   │
+│ ① 双目标定 │ → │ ② 图像校正 │ → │ ③ 瞳孔识别  │ → │ ④ 三角测量 │ → │ ⑤ 坐标变换 │
+│ 内外参获取 │   │ 去畸变   │   │ 语义分割  │   │ 空间测距 │   │ 输出Pt   │
 └──────────┘   └──────────┘   └───────────┘   └──────────┘   └──────────┘
 ```
 
