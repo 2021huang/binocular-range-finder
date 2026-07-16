@@ -1,0 +1,22 @@
+%YAML:1.0
+---
+# 双目相机外参
+# TODO: 由开发者上传标定结果
+
+R: !!opencv-matrix
+  rows: 3
+  cols: 3
+  dt: d
+  data: [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ]
+
+T: !!opencv-matrix
+  rows: 3
+  cols: 1
+  dt: d
+  data: [ 60.0, 0.0, 0.0 ]
+
+rvec: !!opencv-matrix
+  rows: 3
+  cols: 1
+  dt: d
+  data: [ 0.0, 0.0, 0.0 ]
