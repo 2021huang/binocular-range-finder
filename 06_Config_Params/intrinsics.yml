@@ -1,31 +1,25 @@
 %YAML:1.0
----
-# 双目相机内参
-# TODO: 由开发者上传标定结果
-
-Kl: !!opencv-matrix
-  rows: 3
-  cols: 3
-  dt: d
-  data: [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ]
-
-dist_l: !!opencv-matrix
-  rows: 1
-  cols: 5
-  dt: d
-  data: [ 0.0, 0.0, 0.0, 0.0, 0.0 ]
-
-Kr: !!opencv-matrix
-  rows: 3
-  cols: 3
-  dt: d
-  data: [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ]
-
-dist_r: !!opencv-matrix
-  rows: 1
-  cols: 5
-  dt: d
-  data: [ 0.0, 0.0, 0.0, 0.0, 0.0 ]
-
-image_width: 1280
-image_height: 1024
+LtCameraMatrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1.1056e+003, 4.662e-001, 3.774855e+002, 0.,
+       1.1059e+003, 6.313129e+002, 0., 0., 1. ]
+LtDistcoeffs: !!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [ 1.190e-001, -1.0908e+000,
+       -4.7787e-006, 2.5183e-004, 1.8947e+000 ]
+RtCameraMatrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1.1040e+003, -7.56e-002, 3.509238e+002, 0.,
+       1.1039e+003, 6.453764e+002, 0., 0., 1. ]
+RtDistcoeffs: !!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [ 1.186e-001, -1.0787e+000,
+       -4.5512e-005, -5.5290e-005, 2.1710e+000 ]
