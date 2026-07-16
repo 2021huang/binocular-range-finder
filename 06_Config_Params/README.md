@@ -4,12 +4,10 @@
 ```
 06_Config_Params/
 ├── intrinsics.yml           # 双目内参
-├── extrinsics.yml           # 双目外参
+├── extrinsics.yml           # 双目外参矩阵 (R, T)
 ├── model_config.yml         # 模型配置
-└── extrinsic_matrices/      # 各代测试样机的外参矩阵 (R, T) 记录
-    ├── prototype_v1.yml
-    ├── prototype_v2.yml
-    └── ...
+├── puilcheck_sim0.onnx      # 相机0图像分割模型
+├── puilcheck_sim1.onnx      # 相机1图像分割模型
 ```
 
 > 配置文件由开发者上传
